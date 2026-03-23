@@ -1,0 +1,21 @@
+name: Trivy Image Scan
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:  # allows manual trigger
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@0.33.0
+        with:
+          image-ref: 'nginx:latest'          # image to scan
+          format: 'table'                     # output format (table, json, sarif)
+          severity: 'CRITICAL,HIGH'           # filter by severity
+          exit-code: '1'                      # fail the build if vulns found
